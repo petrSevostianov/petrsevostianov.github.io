@@ -55,4 +55,4 @@ This device is able to display temperature-balanced color sequences with high ac
 
 12 minutes long calibration video displays 16x16x16=4096 colors covering the entire RGB cube uniformly.
 
-<iframe id="viewer" src="./Tools/3DLUT_Viewer.html" width="100%" height="400px"></iframe>
+<iframe id="viewer" src="./Tools/3DLUTViewer.html" width="100%" height="400px"></iframe>

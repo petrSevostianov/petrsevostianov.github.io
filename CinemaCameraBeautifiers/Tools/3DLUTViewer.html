@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>3D LUT Viewer — UMD (robust OrbitControls)</title>
+  <title>3D LUT Viewer</title>
   <style>
     html,body{height:100%;margin:0;overflow:hidden;font-family:Inter,Segoe UI,Arial}
     #canvas{display:block;width:100%;height:100%;background:#f5f5f5}
@@ -26,6 +26,27 @@
 
 
   <script type="module">
+
+    const params = new URLSearchParams(window.location.search);
+    const lutPath = params.get('lut');
+    console.log('LUT path:', lutPath);
+
+    //load lut file content if provided
+    if (lutPath) {
+      fetch(lutPath).then(res => {
+        if (!res.ok) {
+          throw new Error(`Failed to load LUT file: ${res.status} ${res.statusText}`);
+        }
+        return res.text();
+      }).then(text => {
+        console.log('LUT file content:', text);
+      }).catch(err => {
+        console.error(err);
+      })
+    }
+
+
+
     import * as THREE from 'three';
     import { OrbitControls } from 'three/controls/OrbitControls.js';
 
@@ -44,48 +65,35 @@
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x808080);
 
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 50);
+    const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.01, 50);
     //camera.position.set(1.5, 1.2, 1.8);
 
 
     const controls = new OrbitControls( camera, renderer.domElement );
     // controls.update() must be called after any manual changes to the camera's transform
-    camera.position.set( 0, 3, 2 );
+    camera.position.set( -2, 2, -2 );
+    controls.target.set( 0.5, 0.5, 0.5 );
     controls.update();
 
     // Helpers
     const axes = new THREE.AxesHelper(1);
     scene.add(axes);
 
-    const box = new THREE.Box3(new THREE.Vector3(-0.5, -0.5, -0.5), new THREE.Vector3(0.5, 0.5, 0.5));
-    const boxHelper = new THREE.Box3Helper(box, 0x333333);
-    scene.add(boxHelper);
+    /*const box = new THREE.Box3(new THREE.Vector3(0,0,0), new THREE.Vector3(1,1,1));
+    const boxHelper = new THREE.Box3Helper(box, 0x00000080);
+    scene.add(boxHelper);*/
 
     // --- LUT builders (test cases) ---
     function buildIdentityLUT(n = 17) {
       const arr = [];
-      for (let b = 0; b < n; b++) for (let g = 0; g < n; g++) for (let r = 0; r < n; r++) {
+      for (let b = 0; b < n; b++)
+      for (let g = 0; g < n; g++)
+      for (let r = 0; r < n; r++) {
         arr.push([r / (n - 1), g / (n - 1), b / (n - 1)]);
       }
       return arr;
     }
 
-    function buildInverseLUT(n = 9) {
-      const arr = [];
-      for (let b = 0; b < n; b++) for (let g = 0; g < n; g++) for (let r = 0; r < n; r++) {
-        arr.push([1 - r / (n - 1), 1 - g / (n - 1), 1 - b / (n - 1)]);
-      }
-      return arr;
-    }
-
-    // Additional test: small random LUT (helpful to check rendering variety)
-    function buildRandomLUT(n = 8) {
-      const arr = [];
-      for (let i = 0; i < n * n * n; i++) {
-        arr.push([Math.random(), Math.random(), Math.random()]);
-      }
-      return arr;
-    }
 
     // Render LUT as point cloud
     function renderLUT(data, pointSize = 0.02) {
@@ -95,17 +103,28 @@
         if (prev.material) prev.material.dispose();
         scene.remove(prev);
       }
-
+      let lutSize = Math.cbrt(data.length);
       const positions = new Float32Array(data.length * 3);
       const colors = new Float32Array(data.length * 3);
-      for (let i = 0; i < data.length; i++) {
-        const [r, g, b] = data[i];
-        positions[i * 3 + 0] = r - 0.5;
-        positions[i * 3 + 1] = g - 0.5;
-        positions[i * 3 + 2] = b - 0.5;
-        colors[i * 3 + 0] = r;
-        colors[i * 3 + 1] = g;
-        colors[i * 3 + 2] = b;
+
+      let index = 0;
+      for (let b = 0; b < lutSize; b++) {
+        for (let g = 0; g < lutSize; g++) {
+          for (let r = 0; r < lutSize; r++) {
+            let sr = r / (lutSize - 1);
+            let sg = g / (lutSize - 1);
+            let sb = b / (lutSize - 1);
+            const [dr, dg, db] = data[index];
+            positions[index * 3 + 0] = dr;
+            positions[index * 3 + 1] = dg;
+            positions[index * 3 + 2] = db;
+            colors[index * 3 + 0] = sr;
+            colors[index * 3 + 1] = sg;
+            colors[index * 3 + 2] = sb;
+            index++;
+            
+          }
+        }
       }
 
       const geom = new THREE.BufferGeometry();
@@ -122,13 +141,6 @@
     const identity = buildIdentityLUT(17);
     renderLUT(identity, 0.02);
 
-    // Switch to inverse and back to identity to test dynamic updates
-    /*setTimeout(() => renderLUT(buildInverseLUT(9), 0.03), 1000);
-    setTimeout(() => renderLUT(identity, 0.02), 1800);
-
-    // Additional test: random LUT after a short delay
-    setTimeout(() => renderLUT(buildRandomLUT(6), 0.025), 2600);
-    setTimeout(() => renderLUT(identity, 0.02), 3600);*/
 
     // Animation loop
     function animate() {
@@ -145,11 +157,6 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Expose API for debugging
-    window.__lutViewer = { renderLUT, buildIdentityLUT, buildInverseLUT, buildRandomLUT };
-
-    // Developer note: If you want ES module imports instead, run this file via a local dev server
-    // (e.g., `python -m http.server`) and change to module imports for modern bundlers.
   </script>
 </body>
 </html>
