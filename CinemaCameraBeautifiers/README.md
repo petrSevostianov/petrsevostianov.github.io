@@ -18,12 +18,16 @@ Since light is additive, all mixtures of any two colors should lay on a straight
 In simple words, **Half-Yellow**(0.5 0.5 0) will not be between **Red**(1 0 0) and **Green**(0 1 0). There is a reason why this nonlinear gamut transform exists, but is a topic for another article.
 
 ## How to find this nonlinearity with a simple experiment?
+This experiment relies on the fact that light is additive. So to get image of a scene illuminated by two lights, we can sum images of each light on separately.
+
 You will need:
 - Cinema camera
 - 2 RGB lights
 - White object of any shape
 
 We can capture 4 images where each light in one of two states. By choosing those states(colors) differently, we can measure how mixtures of those colors are bent.
+
+So we will do 4 experiments with the following color pairs:
 
 |Experiment | State A | State B |
 |-----------|---------|---------|
@@ -44,15 +48,21 @@ For each experiment, we will capture 4 images:
 After **removing transfer function**, `I1`+`I2` should be equal to `I3`+`I4` if images are linear. Any difference shows nonlinearity.
 
 ![Two Lights Experiment](TwoLightsExperiment.png)
-here is the results of 4 experiments with different color pairs. We compare sum of 2 images on the left with sum of another 2 images on the right. The most right two columns shows difference (positive and negative) between those sums. There is noise-scale difference in black-white direction, as expected, showing that camera is linear in that direction. However, there are visible color shifts in other three directions showing that camera is nonlinear in gamut plane.
+On that image we can see the results of the experiments.
+Each row corresponds to one of the experiments above.
+Left column is `I1+I2`, middle column is `I3+I4`, right column is difference (positive and negative) between those sums.
+
+Experiment 1 shows very small difference (noise scale). That is what we expect.
+However, experiments 2, 3 and 4 show significant differences. That means that camera is nonlinear in gamut plane.
 
 ## Measuring gamut nonlinearity
-The experiment above can only show that nonlinearity exists, but does not provide enough data to measure and reverse-engineer it. In order to do that, we've designed a measurement device that is able to precisely display linear colors. This device is based on RGB LEDs with very high power stability and state-of-the-art PWM control.
+The experiment above can only show that nonlinearity exists, but does not provide enough data to measure and reverse-engineer it. In order to do that, we've designed a measurement device that is able to precisely display linear colors. This device is based on RGB LEDs with excellent voltage stability and state-of-the-art PWM control.
 This device is able to display temperature-balanced color sequences with high accuracy, allowing us to probe the camera's response to various color stimuli.
 
 ![Camera Calibration Device Frame](CameraCalibratorFrame.png)
 *here is a frame from the calibration sequence. Central area shows the color to be averaged later to reduce noise, four dots at the corners act as reference points for alignment and as strobe to split the sequence into samples.*
 
-12 minutes long calibration video displays 16x16x16=4096 colors covering the entire RGB cube uniformly.
+12 minutes long calibration video contains 16x16x16=4096 color samples covering the entire RGB cube uniformly.
 
+This is measured data:
 <iframe id="viewer" src="./Tools/3DLUTViewer.html?lut=../bmpcc6k.cube" width="100%" height="400px"></iframe>

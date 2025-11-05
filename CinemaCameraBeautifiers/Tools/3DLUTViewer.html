@@ -72,6 +72,16 @@
       })
     }*/
 
+    function BuildIdentityLUT(n = 17) {
+      const arr = [];
+      for (let b = 0; b < n; b++)
+      for (let g = 0; g < n; g++)
+      for (let r = 0; r < n; r++) {
+        arr.push([r / (n - 1), g / (n - 1), b / (n - 1)]);
+      }
+      return arr;
+    }
+
     function Setup3DScene(lutData) {
 
 
@@ -89,7 +99,7 @@
 
       const controls = new OrbitControls( camera, renderer.domElement );
       // controls.update() must be called after any manual changes to the camera's transform
-      camera.position.set( -2, 2, -2 );
+      camera.position.set( -2, 1, -1 );
       controls.target.set( 0.5, 0.5, 0.5 );
       controls.update();
 
@@ -97,20 +107,7 @@
       const axes = new THREE.AxesHelper(1);
       scene.add(axes);
 
-      /*const box = new THREE.Box3(new THREE.Vector3(0,0,0), new THREE.Vector3(1,1,1));
-      const boxHelper = new THREE.Box3Helper(box, 0x00000080);
-      scene.add(boxHelper);*/
-
-      // --- LUT builders (test cases) ---
-      function buildIdentityLUT(n = 17) {
-        const arr = [];
-        for (let b = 0; b < n; b++)
-        for (let g = 0; g < n; g++)
-        for (let r = 0; r < n; r++) {
-          arr.push([r / (n - 1), g / (n - 1), b / (n - 1)]);
-        }
-        return arr;
-      }
+      
 
 
       // Render LUT as point cloud
