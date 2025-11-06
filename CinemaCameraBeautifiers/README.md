@@ -24,7 +24,7 @@ Since light is additive, all mixtures of any two colors should lay on a straight
 In simple words, **Half-Yellow**(0.5 0.5 0) will not be between **Red**(1 0 0) and **Green**(0 1 0). There is a reason why this nonlinear gamut transform exists, but is a topic for another article.
 
 ## Naming
-Since I failed to find any established term for this transformation, I will call it **Beautifier** as we call it internally in [Antilatency](https://antilatency.com) company. Inverse operation will be called **Debeautifier**. This kind of naming addresses the fact that this transform is an artistic color grading, there is no single "correct" way to do it. If a vendor try to opti
+Since I failed to find any established term for this transformation, I will call it **Beautifier** as we call it internally in [Antilatency](https://antilatency.com) company. Inverse operation will be called **Debeautifier**. This kind of naming addresses the fact that this transform is an artistic color grading, there is no single "correct" way to do it.
 
 
 ## How to find this nonlinearity with a simple experiment?
