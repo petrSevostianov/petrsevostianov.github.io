@@ -1,8 +1,10 @@
 title: My Jekyll Site
 description: A static website built with Jekyll
-url: "https://example.com"
+
 markdown: kramdown
 remote_theme: BDHU/minimalist
+color-scheme: light
+
 plugins:
   - jekyll-readme-index
 readme_index:
