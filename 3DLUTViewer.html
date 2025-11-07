@@ -191,7 +191,7 @@
       return data;
     }
 
-    function AddLUTToScene(scene, data, pointSize = 0.02) {
+    function AddLUTToScene(scene, data) {
       const prev = scene.getObjectByName('lut_points');
       if (prev) {
         prev.geometry.dispose();
@@ -221,6 +221,16 @@
           }
         }
       }
+
+      const whitePoint = data[data.length - 1];
+      const distanceToWhite = Math.sqrt(
+        whitePoint[0] ** 2 +
+        whitePoint[1] ** 2 +
+        whitePoint[2] ** 2
+      );
+      console.log('Distance to white point:', distanceToWhite);
+
+      let pointSize = (distanceToWhite / lutSize) * 0.35;
 
       const geom = new THREE.BufferGeometry();
       geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -442,7 +452,7 @@
     }
 
     function ApplyLUTData(data){
-      AddLUTToScene(scene, data, 0.02);
+      AddLUTToScene(scene, data);
       if (showChromaTriangle !== null) {
         var layer = parseInt(showChromaTriangle);
         if (!isNaN(layer) && layer > 0) {

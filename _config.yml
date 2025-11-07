@@ -1,13 +1,20 @@
-title: My Jekyll Site
-description: A static website built with Jekyll
+title: Petr Sevostianov
+description: Research and experiments about color science.
+
+social_links:
+  github: https://github.com/petrsevostianov
+  linkedin: https://www.linkedin.com/in/petr-sevostianov-67783875/
 
 markdown: kramdown
 remote_theme: BDHU/minimalist
 color-scheme: light
 
+#remote_theme: benbalter/retlab
+
 plugins:
+  - jekyll-remote-theme
   - jekyll-readme-index
 readme_index:
   enabled:          true
-  remove_originals: false
-  with_frontmatter: true
+  remove_originals: true
+  with_frontmatter: false
