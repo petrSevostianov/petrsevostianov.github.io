@@ -169,7 +169,7 @@ And here is the result of removing Beautifier without restoring native color bal
 {% include Gap %}
 
 There are still some minor defects, and that is probably due to lack of resolution of measurements.
-As further increasing of measurement resolution will take too long to capture, the next step would be to implement a hybrid measurement sequence with basic resolution across the whole cube and high resolution on `r+g+b=1` plane.
+As further increasing the measurement resolution would take too long to capture, the next step is to implement a hybrid measurement sequence with a basic resolution across the entire cube and a high resolution on the `r+g+b=1` plane.
 
 
 
