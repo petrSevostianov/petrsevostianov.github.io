@@ -1,7 +1,7 @@
 ---
 title: Cinema Camera Beautifiers
 description: >
-  This study is focused on exploring nonlinear gamut transforms done by cinema cameras. These transforms make images non-linear and damage most of the techniques in virtual production such as keying, lighting calibration and LED wall to camera matching. Since these transforms are not publicly documented, the goal is to to characterize and model them. The article describes the methodology of measuring, canceling and re-applying such transforms.
+  This study is focused on exploring nonlinear gamut transforms done by cinema cameras. These transforms make images non-linear and damage most of the techniques in virtual production such as keying, lighting calibration and LED wall to camera matching. Since these transforms are not publicly documented, the goal is to characterize and model them. The article describes the methodology of measuring, canceling and re-applying such transforms.
 image: /CinemaCameraBeautifiers/Title.png
 ---
 
@@ -202,7 +202,7 @@ As further increasing the measurement resolution would take too long to capture,
 - Get video from camera (beautified, packed with transfer function)
 - Remove transfer function
 - Remove Beautifier (apply Debeautifier)
-- Calculate and apply Matrix3x3 to match LED wall primaries
+- Calculate and apply Matrix3x3 to match LED wall primaries.
 In this stage of the pipeline any value sent to LED wall will be captured by camera with the same value. Of course, the display should be linear.
 - Re-apply Beautifier on post if needed.
 
