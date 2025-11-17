@@ -1,6 +1,6 @@
 ## Solution to the LED Wall Calibration problem of Virtual Production.
 
-Hello! I'm Petr Sevostianov, CTO and co-founder of Antilatency. I have written an article about an important problem in virtual production related to cinema cameras and their non-linear color output.
+Hello! I'm Petr Sevostianov, CTO and co-founder of Antilatency. I have written an article about an important problem in **virtual production** related to cinema cameras and their non-linear color output.
 
 Besides the well-known transfer functions (e.g. SLog3, LogC4 ..) applied by cinema cameras, there is another transform operation: a **non-linear gamut transform**. This transform distorts colors in gamut space and breaks linearity.
 

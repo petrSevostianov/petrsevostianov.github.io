@@ -220,7 +220,16 @@ Important note: When we re-apply the Beautifier at the last stage, we can use a 
 Ideally, all cinema cameras should provide an option to disable the Beautifier in-camera, so virtual production teams can get linear footage directly from the camera without the need to reverse-engineer these transforms. Also, it would be great to have vendor-provided beautifiers to be able to re-apply them to keep the original look.
 
 Today we can see some steps being taken in this direction. For instance, Blackmagic Design provides (since BRAW SDK Beta 3) an option to disable Gamut compresstion in BRAW SDK. BRAW format stores footage very close to sensor data and applies the Beautifier on the unpacking stage. Since version Beta 3, it is possible to disable this step and get footage without Beautifier applied. See [BlackmagicRAW-SDK.pdf](https://documents.blackmagicdesign.com/DeveloperManuals/BlackmagicRAW-SDK.pdf) page 24.
-However, this does not help yet to get unbeautified video via HDMI/SDI outputs, required for virtual production. Moreover, to keep original color grading of the camera, we need a way to re-apply the Beautifier after all the virtual production operations are done, which is still not possible.
+
+For newer cameras from Blackmagic Design (such as **PYXIS 6K**), it is possible to disable Gamut Compression directly in-camera.
+
+[PYXIS 6K Manual](https://www.bhphotovideo.com/lit_files/1162746.pdf#page=72) page 72.
+![BMD_PYXIS_6K_MenuScreen](BMD_PYXIS_6K_MenuScreen.png)
+*Thank you, KaurTheColorist from [reddit/colorists](https://www.reddit.com/r/colorists/comments/1ow6ft7/comment/np15l2j) for this information.*
+
+Looking forward for firmware updates to have this option available for older cameras as well.
+
+As far as I know, this transform is still not documented publicly; that means there is no way to apply it in post-production to restore the original look. Hopefully, this will change in the future.
 
 ## Dear color management system developers
 It would be great if there was a standard way to describe the Beautifier/Debeautifier transforms, implemented in popular color management systems such as ACES, OpenColorIO, etc.

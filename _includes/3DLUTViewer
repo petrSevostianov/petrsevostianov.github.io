@@ -1,6 +1,25 @@
 <div style="width:100%; aspect-ratio:1; max-height:512px;">
+    {% assign sep = "" %}
+    {% assign q = "" %}
+
+    {%- comment -%}
+    Build query string only with params that exist
+    {%- endcomment -%}
+
+    {% capture qs %}
+        {%- if include.showChromaTriangle -%}
+            {{ q }}showChromaTriangle={{ include.showChromaTriangle }}{% assign q = "&" %}
+        {%- endif -%}
+
+        {%- if include.lut -%}
+            {{ q }}lut={{ page.path | split: '/' | pop | join: '/' | append: '/' | append: include.lut }}{% assign q = "&" %}
+        {%- endif -%}
+    {% endcapture %}
+
+    {% assign qs = qs | strip %}
+
     <iframe
-        src="{{'3DLUTViewer.html'|relative_url}}?showChromaTriangle={{include.showChromaTriangle | default: '0'}}&lut={{ page.path | split: '/' | pop | join: '/' | append: '/' | append: include.lut}}"
+        src="{{ '3DLUTViewer.html' | relative_url }}{% if qs != "" %}?{{ qs }}{% endif %}"
         width="100%"
         height="100%">
     </iframe>

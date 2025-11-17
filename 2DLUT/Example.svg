@@ -1,0 +1,190 @@
+<!-- dec 0 51 102 153 204 255 -->
+<!-- hex 00 33 66 99 cc ff -->
+
+<svg xmlns="http://www.w3.org/2000/svg"
+    overflow="visible"
+    width="100%" viewBox="0 0 700 600">
+
+    <!-- <rect width="100%" height="100%" fill="#ffffff"></rect> -->
+    
+    <rect width="100" height="100" x="0"   y="500" fill="#0000ff"/>
+
+    <rect width="100" height="100" x="100" y="500" fill="#3300cc"/>
+    <rect width="100" height="100" x="200" y="500" fill="#660099"/>
+    <rect width="100" height="100" x="300" y="500" fill="#990066"/>
+    <rect width="100" height="100" x="400" y="500" fill="#cc0033"/>
+    <rect width="100" height="100" x="500" y="500" fill="#ff0000"/>
+
+    <rect width="100" height="100" x="0"   y="400" fill="#0033cc"/>
+    <rect width="100" height="100" x="100" y="400" fill="#333399"/>
+    <rect width="100" height="100" x="200" y="400" fill="#663366"/>
+    <rect width="100" height="100" x="300" y="400" fill="#993333"/>
+    <rect width="100" height="100" x="400" y="400" fill="#cc3300"/>
+
+    <rect width="100" height="100" x="0"  y="300" fill="#006699"/>
+    <rect width="100" height="100" x="100" y="300" fill="#336666"/>
+    <rect width="100" height="100" x="200" y="300" fill="#666633"/>
+    <rect width="100" height="100" x="300" y="300" fill="#996600"/>
+
+
+    <g id = "UpperTriangle">
+
+    <use href="#UpperTriangleAnimation"/>
+    <animateTransform id ="UpperTriangleAnimationTranslate"
+        attributeName="transform"
+        begin = "indefinite"
+        type="translate"
+        values="0 0; 0 0; 700 600; 700 600; 0 0"
+        keyTimes="0; 0.2; 0.5; 0.8; 1"
+        dur="4s"
+        repeatCount="indefinite"
+        additive="sum"/>
+    <animateTransform id ="UpperTriangleAnimationRotate"
+        attributeName="transform"
+        begin = "indefinite"
+        type="rotate"
+        values="0 0 0; 0 0 0; -180 0 0; -180 0 0; 0 0 0"
+        keyTimes="0; 0.2; 0.5; 0.8; 1"
+        dur="4s"
+        repeatCount="indefinite"
+        additive="sum"/>    
+        
+
+    <rect width="100" height="100" x="0"  y="200" fill="#009966"/>
+    <rect width="100" height="100" x="100" y="200" fill="#339933"/>
+    <rect width="100" height="100" x="200" y="200" fill="#669900"/>
+
+    <rect width="100" height="100" x="0"  y="100" fill="#00cc33"/>
+    <rect width="100" height="100" x="100" y="100" fill="#33cc00"/>
+
+    <rect width="100" height="100" x="0"  y="0" fill="#00ff00"/>
+
+    </g>
+
+    <script type="application/ecmascript"> <![CDATA[
+        (()=>{
+        let thisScriptTag = document.currentScript;
+        //find parent SVG element
+        let svg = thisScriptTag.closest("svg");
+        //delete script tag
+        thisScriptTag.remove();
+
+        function AnimateUpperTriangle() {
+        console.log("Animating Upper Triangle");
+        
+            let translate = svg.getElementById("UpperTriangleAnimationTranslate");
+            let rotate = svg.getElementById("UpperTriangleAnimationRotate");
+            translate.beginElement();
+            rotate.beginElement();
+        }
+
+        function AddIndices() {
+            console.log("Adding Indices");
+            let rects = svg.getElementsByTagName("rect");
+            let i = 0;
+            for (let rect of rects) {
+                let index = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                
+                
+                index.setAttribute("x", parseFloat(rect.getAttribute("x")) + 10);
+                index.setAttribute("y", parseFloat(rect.getAttribute("y")) + 20);
+                index.setAttribute("font-size", "12");
+                index.setAttribute("fill", "#ffffff");
+                index.textContent = i;
+                rect.parentNode.appendChild(index);//same parent as rect
+                i++;
+            }
+        }
+
+        function DrawLattice(){
+            let rects = svg.getElementsByTagName("rect");
+
+            /*let points = [];
+
+            for (let rect of rects) {
+                let x = rect.x.baseVal.value;
+                let y = rect.y.baseVal.value;                
+                points.push([x,y]);
+            } */ 
+ 
+            function CreateLine(rectA, rectB){
+                let pointAx = rectA.x.baseVal.value + 50;
+                let pointAy = rectA.y.baseVal.value + 50;
+                let pointBx = rectB.x.baseVal.value + 50;
+                let pointBy = rectB.y.baseVal.value + 50;
+                let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", pointAx);
+                line.setAttribute("y1", pointAy);
+                line.setAttribute("x2", pointBx);
+                line.setAttribute("y2", pointBy);
+                line.setAttribute("stroke", "#000000");
+                line.setAttribute("stroke-width", "2");
+                line.Start = rectA;
+                line.End = rectB;
+                svg.appendChild(line);
+            }
+            
+            function GetIndex(u, v, n){
+                return (2*n - v +1)*v/2 + u;
+            }
+
+            for (let u = 0; u < 6-1; u++){
+                for (let v = 0; v < 6 - u-1; v++){
+                    let index = GetIndex(u, v, 6);
+                    let indexRight = GetIndex(u+1, v, 6);
+                    let indexUp = GetIndex(u, v+1, 6);
+                    CreateLine(rects[index], rects[indexRight]);
+                    CreateLine(rects[index], rects[indexUp]);
+                    CreateLine(rects[indexRight], rects[indexUp]);
+                }
+            }      
+        }
+        
+        function getPos(el, ox=0, oy=0) {
+            let pt = svg.createSVGPoint();
+            pt.x = ox;
+            pt.y = oy;
+            let result = pt.matrixTransform(el.getCTM());   
+            return result;
+        }
+
+
+        function AnimateTrianglesHorizontalShift(){
+            let rects = svg.getElementsByTagName("rect");
+
+            function CreateAnimation(element, yName, xName, offsetY){
+                let y = parseFloat(element.getAttribute(yName)) - offsetY;
+                let startX = parseFloat(element.getAttribute(xName));
+                let maxShift = (500-y) * 0.5;
+                let endX = startX + maxShift;
+                let animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                animate.setAttribute("attributeName", xName);
+                animate.setAttribute("values", `${startX}; ${endX}; ${endX}; ${startX}; ${startX}`);
+                animate.setAttribute("keyTimes", "0; 0.2; 0.5; 0.8; 1");
+                animate.setAttribute("dur", "3s");
+                animate.setAttribute("repeatCount", "indefinite");
+                element.appendChild(animate);
+                animate.beginElement();
+            }
+
+            for (let rect of rects) {
+                CreateAnimation(rect, "y", "x", 0);
+            }     
+
+
+            let lines = svg.getElementsByTagName("line");
+            for (let line of lines) {
+                CreateAnimation(line, "y1", "x1", 50);
+                CreateAnimation(line, "y2", "x2", 50);
+            }     
+        }
+
+        {{include.commands}}
+
+        })();
+
+    ]]>
+
+    </script>
+
+</svg>

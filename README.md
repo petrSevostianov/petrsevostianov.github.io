@@ -11,3 +11,5 @@ In this blog, I will explore various problems related to cinematography and, in 
 ### [CinemaCameraBeautifiers](./CinemaCameraBeautifiers)
 
 This study is focused on exploring nonlinear gamut transforms done by cinema cameras. Those transforms make images non-linear and damage most of the techniques in virtual production such as keying, lighting calibration and LED wall to camera matching. Since these transforms are not publicly documented, the goal is to characterize and model them. The article describes the methodology of measuring, canceling and re-applying such transforms.
+
+### [2D LUT](./2DLUT)
