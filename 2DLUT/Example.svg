@@ -87,8 +87,8 @@
                 
                 
                 index.setAttribute("x", parseFloat(rect.getAttribute("x")) + 10);
-                index.setAttribute("y", parseFloat(rect.getAttribute("y")) + 20);
-                index.setAttribute("font-size", "12");
+                index.setAttribute("y", parseFloat(rect.getAttribute("y")) + 30);
+                index.setAttribute("font-size", "24");
                 index.setAttribute("fill", "#ffffff");
                 index.textContent = i;
                 rect.parentNode.appendChild(index);//same parent as rect

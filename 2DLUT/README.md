@@ -35,10 +35,9 @@ float sum = inputColor.r + inputColor.g + inputColor.b;
 if (sum < EPSILON)
     return float3(0,0,0); // black
 
-float u = inputColor.r / sum;
-float v = inputColor.g / sum;
+float2 uv = inputColor.rg / sum;
 
-float3 transformedColor = Sample2DLUT(u, v);
+float3 transformedColor = Sample2DLUT(uv);
 
 transformedColor *= sum; // restore scale
 
@@ -55,15 +54,6 @@ We can shift each row to the left to align nodes with texture pixels:
 {% include Gap %}
 
 
-## Ordering of nodes in 2D LUT
-{% include_relative Example.svg commands="AddIndices();" %}
-{% include Gap %}
-In 6x6 2D LUT 
-Node with index **0** contanins new value for input color (0,0,1) = **Blue**. If input color is scaled Blue, for example (0,0,0.5), output color will be multiplied by 0.5 as well.
-Node with index **5** contains new value for input color (1,0,0) = **Red**. 
-Node with index **20** contains new value for input color (0,1,0) = **Green**.
-
-
 ## Packing
 As you may notice, half of the texture pixels are unused. We can pack the triangle. Let's cut the upper half and put it to the right side:
 
@@ -71,7 +61,9 @@ As you may notice, half of the texture pixels are unused. We can pack the triang
 {% include Gap %}
 
 ## Sampling
-To sample 2D LUT, we can not use bilinear filtering, because we stored a triangular lattice. Instead, we need to find the triangle where the input coordinates are located, load that 3 values and use barycentric coordinates to interpolate between them. Here is the HLSL code to do that:
+To sample 2D LUT, we can not use bilinear filtering, because we stored a triangular lattice. Instead, we need to find the triangle where the input coordinates are located, load that 3 values and use barycentric coordinates to interpolate between them.
+
+Here is the HLSL code to sample Packed 2D LUT:
 ``` hlsl
 //LUT is a Texture2D<float4> containing 2D LUT data
 float3 Sample2DLUT(float2 uv) {
@@ -79,7 +71,7 @@ float3 Sample2DLUT(float2 uv) {
     uint sizeY;
     LUT.GetDimensions(sizeX, sizeY);
 
-    float2 pixelPosition = projected.xy * float2(sizeX - 2, 2 * sizeY - 1);
+    float2 pixelPosition = uv * float2(sizeX - 2, 2 * sizeY - 1);
 
     int2 pixelPosition00 = int2(pixelPosition);
     //pixelPosition00 is a position of rectangle we are in
@@ -106,20 +98,67 @@ float3 Sample2DLUT(float2 uv) {
     }
 
     //load 3 LUT values
-    float3 transformed00 = LUT.Load(int3(pixelPosition00, 0)).rgb * sum;
-    float3 transformed10 = LUT.Load(int3(pixelPosition10, 0)).rgb * sum;
-    float3 transformed01 = LUT.Load(int3(pixelPosition01, 0)).rgb * sum;
+    float3 transformed00 = LUT.Load(int3(pixelPosition00, 0)).rgb;
+    float3 transformed10 = LUT.Load(int3(pixelPosition10, 0)).rgb;
+    float3 transformed01 = LUT.Load(int3(pixelPosition01, 0)).rgb;
 
     //interpolate using barycentric coordinates
-    float3 result = transformed00 + frac.x * (transformed10 - transformed00) + frac.y * (transformed01 - transformed00);
+    float3 result =
+        transformed00
+        + frac.x * (transformed10 - transformed00)
+        + frac.y * (transformed01 - transformed00);
 
     return result;
 }
 ```
 
+## Image format
+2D LUT can be stored in an image file with lossless compression and float data support, for example, EXR;
+
+For 2D LUT with N nodes along the edge, image size should be:
+- For Packed version:
+    - Width = N + 1
+    - Height = N / 2
+    
+Packed version supports only even N.
 
 
+## Text format
+To be similar to existing [3D LUT text format](https://kono.phpage.fr/images/a/a1/Adobe-cube-lut-specification-1.0.pdf), here is proposed text format for 2D LUT:
 
+```
+# 2D LUT    
+LUT_2D_SIZE N
+TITLE "Optional title"
+DOMAIN_R 1.0 0.0 0.0
+DOMAIN_G 0.0 1.0 0.0
+DOMAIN_B 0.0 0.0 1.0
+r0 g0 b0
+r1 g1 b1
+...
+
+rM-1 gM-1 bM-1
+```
+Where `N` = number of nodes along the edge, `M = (N+1) * N / 2` = total number of nodes.
+
+## Ordering of nodes in 2D LUT
+{% include_relative Example.svg commands="AddIndices();" %}
+{% include Gap %}
+In 2D LUT of size 6
+Node with index **0** contanins new value for input color (0,0,1) = **Blue**. If input color is scaled Blue, for example (0,0,0.5), output color will be multiplied by 0.5 as well.
+Node with index **5** contains new value for input color (1,0,0) = **Red**. 
+Node with index **20** contains new value for input color (0,1,0) = **Green**.
+
+
+## Domain
+By default, we project the input color onto the triangle defined by the points (1,0,0), (0,1,0), and (0,0,1).
+However, if we design a LUT to describe a transformation of a specific portion of the color space or the opposite, to handle out-of-gamut colors (input colors with negative components), we can define a custom domain using the `DOMAIN_R`, `DOMAIN_G`, and `DOMAIN_B` tags in the text format.
+
+`DOMAIN_R`, `DOMAIN_G`, and `DOMAIN_B` are vectors in input space that define the corners of the triangle onto which input colors will be projected before sampling the 2D LUT. 
+Using these vectors, we can build a 3x3 matrix
+`DomainToInputMatrix = [DOMAIN_R; DOMAIN_G; DOMAIN_B]`. This matrix is a thansform from internal domain space to input space.
+
+Next, we calculate the inverse matrix `InputToDomainMatrix = inverse(DomainToInputMatrix)`. This matrix transforms input colors to the DOMAIN space and should be used in the shader code before projecting the color onto the triangle.
 
 
 

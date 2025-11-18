@@ -58,8 +58,7 @@ The problems with that approach are:
 It is a very good hack though, and later in this article I will explain why it works for some colors.
 
 ## How can you spot gamut nonlinearity at home?
-<!-- ## How to find this nonlinearity with a simple experiment? -->
-<!-- The **Two Lights Experiment** relies on the fact that light is additive. So to get an image of a scene illuminated by two lights, we can sum images of each light on separately.  -->
+
 The **Two Lights Experiment** relies on the fact that light is additive. Therefore, for a truly linear camera, the photo of a scene illuminated **by both lights** must be **equal** to the per-pixel **sum of images** of the scene illuminated **by each light separately**. We can use this knowledge to check whether a camera is linear or not. The experiments can be done with minimal equipment.
 
 You will need:
@@ -167,7 +166,8 @@ As we can see from the plot above, this distortion is unlike any smooth function
 
 Instead, we can invent a new type of LUT that is based on homogeneous coordinates. Such a LUT will have constant resolution across brightness levels, and will require much less memory.
 
-## Introducing 2D LUT
+## Introducing [2D LUT](../2DLUT)
+[2D LUT](../2DLUT) is a new type of LUT designed specifically to represent homogeneous functions. It represents a triangular lattice in 3D color space, where each node contains the transformed color for the corresponding input color. Since the function is homogeneous, any color along the line from black to any node can be transformed by interpolating between black and the node's value.
 To have 512 steps between red and green, it uses 1.6Mb (not GB) of memory and has constant resolution across brightness levels. It can be stored as a simple 2D image. Since the shape of the described space is a triangle, we can pack it into a rectangle by cutting off a corner and flipping it.
 
 If we display the gamut transform for the camera I used for this article as a 2D LUT, it looks like this:
