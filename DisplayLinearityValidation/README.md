@@ -50,6 +50,7 @@ Also, it is useful to have the same test for individual color channels. So we ca
 **Very important**: make sure that the pattern is displayed **pixel-perfect**. No scaling!
 For instance, you can set this image as desktop wallpaper with "Tile" mode. 
 
+Because transfer function is baked into the pattern, to validate display with different transfer function, you need different pattern.
 
-
-
+Here is pattern for Rec.709 transfer function:
+![Rec709_DisplayLinearityValidationPattern](Rec709_DisplayLinearityValidationPattern.png)
