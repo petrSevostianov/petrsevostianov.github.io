@@ -161,4 +161,5 @@ Using these vectors, we can build a 3x3 matrix
 Next, we calculate the inverse matrix `InputToDomainMatrix = inverse(DomainToInputMatrix)`. This matrix transforms input colors to the DOMAIN space and should be used in the shader code before projecting the color onto the triangle.
 
 
-
+## Conclusion
+I truly believe that this kind of image transform is essential in cinematography and virtual production workflows. For most cases, a combination of 1D and 2D LUTs can replace 3D LUTs with higher precision and lower memory consumption, potentially leading to more GPU-cache-friendly algorithms.

@@ -19,5 +19,5 @@ This study is focused on exploring nonlinear gamut transforms done by cinema cam
 ### [2D LUT](./2DLUT)
 This article created to be starting point for a proposal to standardize 2D LUT format for color grading applications.
 
-## Conclusion
-I truly believe that this kind of image transform is essential in cinematography and virtual production workflows. For most cases, a combination of 1D and 2D LUTs can replace 3D LUTs with higher precision and lower memory consumption, potentially leading to more GPU-cache-friendly algorithms.
+### [Display Linearity Validation](./DisplayLinearityValidation)
+Linear behavior of a display device is crucial for any color-critical application, including virtual production. In this article, we will explore how to validate the linearity of a display device using a checkerboard pattern.

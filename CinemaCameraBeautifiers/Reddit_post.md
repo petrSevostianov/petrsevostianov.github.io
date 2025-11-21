@@ -23,14 +23,12 @@ I hope you find this research useful and comprehensive. Feel free to reach out i
 
 ## Chromatic nonlinearity in cinema cameras and its impact on virtual production (specifically LED Wall calibration).
 
-Hi everyone! I'm Petr Sevostianov, CTO at Antilatency, and developer of the CyberGaffer system for virtual production lighting.
+Hi everyone! I'm Petr Sevostianov, CTO at Antilatency, and creator of the CyberGaffer system for virtual production lighting.
 
-Recently, I wrote an [article](https://petrsevostianov.github.io/CinemaCameraBeautifiers/) about a significant challenge in virtual production related to cinema cameras.
-During my work on CyberGaffer, I found that it is impossible to calibrate LED walls to cinema cameras accurately, using standard techniques (removing transfer function + matrix 3x3 transform).
-The reason is that cinema cameras apply a **non-linear gamut transform** internally, which distorts colors in a non-linear way.
+Recently, I wrote an [article](https://petrsevostianov.github.io/CinemaCameraBeautifiers/) about a significant problem in virtual production related to cinema cameras. During my work on CyberGaffer, I found that it is impossible to calibrate LED walls to cinema cameras accurately, using standard techniques (removing transfer function + matrix 3x3 transform). The reason is that cinema cameras apply a **non-linear gamut transform** internally, which distorts colors in a non-linear way.
+
 In the article, I describe how we measured and modeled this transform, allowing us to **cancel** it out to get perfectly linear colors and even **re-apply** it in post-processing if we want to restore the original look.
 
 That was a missing piece of knowledge for me, and I believe it is crucial for anyone working in virtual production with cinema cameras.
-You can read the full article here: [https://petrsevostianov.github.io/CinemaCameraBeautifiers/](https://petrsevostianov.github.io/CinemaCameraBeautifiers/)
-I hope you find this research useful! Feel free to reach out if you have any questions or would like to discuss further. Join me in my quest to push virtual production towards transparent and reproducible workflows!
-Thank you!
+
+You can read the full article here: [https://petrsevostianov.github.io/CinemaCameraBeautifiers/](https://petrsevostianov.github.io/CinemaCameraBeautifiers/) I hope you find this research useful! Feel free to reach out if you have any questions or would like to discuss further. Join me in my quest to push virtual production towards transparent and reproducible workflows!
