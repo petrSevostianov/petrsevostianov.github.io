@@ -26,7 +26,7 @@ However, it turns out that the transfer function is not the only non-linear oper
 
 ## What is gamut nonlinearity?
 Since light is additive, every mixture of two arbitrary colors must lie on a straight line between these colors. However, due to gamut nonlinearity, these mixtures are bent away from the straight line.
-In simple words, **Half-Yellow**(0.5 0.5 0) will not lie between **Red**(1 0 0) and **Green**(0 1 0). There is a reason why this nonlinear gamut transform exists, but that is a topic for another article.
+In simple words, **Half-Yellow**(0.5 0.5 0) will not lie between **Red**(1 0 0) and **Green**(0 1 0). There is a reason why this nonlinear gamut transform exists: this transform converts camera measurements of light into an approximation of human perception, but that is a topic for another article.
 
 ## Naming
 Since I failed to find an established term for this transformation, I will call it a **Beautifier** as we call it internally at [Antilatency](https://antilatency.com). The inverse operation will be accordingly called a **Debeautifier**. The naming addresses the fact that this transform is equivalent to artistic color grading; there is no single "correct" way to do it.
@@ -167,12 +167,11 @@ As we can see from the plot above, this distortion is unlike any smooth function
 
 Instead, we can invent a new type of LUT that is based on homogeneous coordinates. Such a LUT will have constant resolution across brightness levels, and will require much less memory.
 
-## Introducing [2D LUT](../2DLUT)
-[2D LUT](../2DLUT) is a new type of LUT designed specifically to represent homogeneous functions. It represents a triangular lattice in 3D color space, where each node contains the transformed color for the corresponding input color. Since the function is homogeneous, any color along the line from black to any node can be transformed by interpolating between black and the node's value.
+## Introducing [2DLUT](../2DLUT)
+[2DLUT](../2DLUT) is a new type of LUT designed specifically to represent homogeneous functions. It represents a triangular lattice in 3D color space, where each node contains the transformed color for the corresponding input color. Since the function is homogeneous, any color along the line from black to any node can be transformed by interpolating between black and the node's value.
 To have 512 steps between red and green, it uses 1.6Mb (not GB) of memory and has constant resolution across brightness levels. It can be stored as a simple 2D image. Since the shape of the described space is a triangle, we can pack it into a rectangle by cutting off a corner and flipping it.
 
-If we display the gamut transform for the camera I used for this article as a 2D LUT, it looks like this:
-
+If we display the gamut transform for the camera I used for this article as a 2DLUT, it looks like this:
 **Beautifier**
 
 ![LUT2D](LUT2D.png)
@@ -181,10 +180,10 @@ If we display the gamut transform for the camera I used for this article as a 2D
 
 ![LUT2DInversed](LUT2DInversed.png)
 
-An important property of a 2D LUT is that it is a superset of Matrix3x3 transform. Any Matrix3x3 can be represented as a 2D LUT. The smallest 2D LUT of 3 pixels is actually a Matrix3x3 multiplication.
+An important property of a 2DLUT is that it is a superset of Matrix3x3 transform. Any Matrix3x3 can be represented as a 2DLUT. The smallest 2DLUT of 3 pixels is actually a Matrix3x3 multiplication.
 
 Previously, I mentioned that we removed Matrix3x3 transform to visualize the Beautifier alone.
-Since a 2D LUT includes Matrix3x3, we can represent a 2D LUT and Matrix3x3 transform together as a single 2D LUT.
+Since a 2DLUT includes Matrix3x3, we can represent a 2DLUT and Matrix3x3 transform together as a single 2DLUT.
 
 Here is the result of removing the Beautifier from the original footage.
 {% include 3DLUTViewer lut="bmpcc6k_Debeautified.cube" %}
