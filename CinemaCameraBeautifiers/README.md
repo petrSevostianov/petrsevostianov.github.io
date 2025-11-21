@@ -17,7 +17,8 @@ These transfer functions are publicly documented for most cameras.
 Here are some references:
 - [SLog3](TransferFunctions/SLog3_SGamut3Cine_SGamut3.pdf)
 - [ARRI LogC4](TransferFunctions/ARRI_LogC4.pdf)
-- [Blackmagic Film Gen 5](TransferFunctions/BlackmagicGen5.pdf)
+- [Blackmagic Film Gen 5](https://www.blackmagicdesign.com/developer/products/braw/sdk-and-software)
+<span style="font-size: 12px;">install Blackmagic RAW SDK, then search for C:\Program Files (x86)\Blackmagic Design\Blackmagic RAW\Blackmagic RAW SDK\Documentation\Blackmagic Generation 5 Color Science Technical Reference.pdf</span>
 
 However, it turns out that the transfer function is not the only non-linear operation done by cinema cameras. There is also a **nonlinear gamut transform** happening in the camera before the transfer function is applied. So the pipeline looks like this:
 
