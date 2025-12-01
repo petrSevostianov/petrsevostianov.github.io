@@ -1,6 +1,6 @@
 # 2D LUT
 
-This article created to be starting point for a proposal to standardize 2D LUT format for color grading applications.
+This article was created to be a starting point for a proposal to standardize 2D LUT format for color grading applications.
 
 ## Motivation
 Today there is no standard and efficient way to describe color transforms in gamut space. 
@@ -20,14 +20,14 @@ Every line from 0 (black) to any color will be deformed into a straight line fro
 This important property will be explained later in the article.
 
 ## Existing ways to describe such transforms
-Existing way to describe such transforms is to use 3D LUTs. But 3D LUTs are suboptimal for this purpose, because:
+The existing way to describe such transforms is to use 3D LUTs. But 3D LUTs are suboptimal for this purpose, because:
 
-- Memory consumption. If we need 512 steps between, let's say, Red and Green, we need **3D LUT** of size 513x513x513 = 135005697 entries. Each entry is 3 floats (RGB), so total size is **1582 MB** in binary format. In contrast, **2D LUT** with 512 steps between Red and Green needs only 513x256 = 131,328 entries = **1.5 MB** in binary format.
+- Memory consumption. If we need 512 steps between, let's say, Red and Green, we need a **3D LUT** the size of 513x513x513 = 135005697 entries. Each entry is 3 floats (RGB), so the total size is **1582 MB** in binary format. In contrast, a **2D LUT** with 512 steps between Red and Green needs only 513x256 = 131,328 entries = **1.5 MB** in binary format.
 
-- Resolution. 3D LUT of size 33x33x33 has 32 steps between 100% Red and 100% Green, but **if brightness decreases**, for example to 25% Red and 25% Green, the number of steps between these colors decreases to only 8 steps. In contrast, 2D LUT of size 33 always has 32 steps, no matter what brightness is.
+- Resolution. 3D LUT of size 33x33x33 has 32 steps between 100% Red and 100% Green, but **if brightness decreases**, for example to 25% Red and 25% Green, the number of steps between these colors decreases to only 8 steps. In contrast, a 2D LUT of size 33 always has 32 steps, no matter what the brightness is.
 
 ## Coordinate mapping
-In order to apply 2D LUT to input 3D color, we need to map input color to 2D coordinates. Here is the proposed mapping: 
+In order to apply a 2D LUT to input 3D color, we need to map the input color to 2D coordinates. Here is the proposed mapping: 
 ``` hlsl
 // project RGB color to a plane x+y+z=1
 float sum = inputColor.r + inputColor.g + inputColor.b;
@@ -44,26 +44,26 @@ transformedColor *= sum; // restore scale
 return transformedColor;
 ```
 
-For further explanation, let's use LUT with 6 nodes along the edge (including corners).
+For the further explanation, let's use a LUT with 6 nodes along the edge (including corners).
 
 ## Mapping to texture pixels
-Out goal is to store 2D LUT data in GPU-memory as a texture and sample it in shader code. 
-The LUT discribes a triangular lattice; texture is rectangular. So we need to define how to map 2D LUT nodes to texture pixels.
+Our goal is to store 2D LUT data in GPU-memory as a texture and sample it in shader code. 
+The LUT describes a triangular lattice; the texture is rectangular. So we need to define how to map 2D LUT nodes to texture pixels.
 We can shift each row to the left to align nodes with texture pixels:
 {% include_relative Example.svg commands="DrawLattice();AnimateTrianglesHorizontalShift();" %}
 {% include Gap %}
 
 
 ## Packing
-As you may notice, half of the texture pixels are unused. We can pack the triangle. Let's cut the upper half and put it to the right side:
+As you may notice, half of the texture pixels are unused. We can pack the triangle. Let's cut the upper half and move it to the right side:
 
 {% include_relative Example.svg commands="AnimateUpperTriangle();" %}
 {% include Gap %}
 
 ## Sampling
-To sample 2D LUT, we can not use bilinear filtering, because we stored a triangular lattice. Instead, we need to find the triangle where the input coordinates are located, load that 3 values and use barycentric coordinates to interpolate between them.
+To sample a 2D LUT, we can not use bilinear filtering, because we stored a triangular lattice. Instead, we need to find the triangle where the input coordinates are located, load those 3 values and use barycentric coordinates to interpolate between them.
 
-Here is the HLSL code to sample Packed 2D LUT:
+Here is the HLSL code to sample the Packed 2D LUT:
 ``` hlsl
 //LUT is a Texture2D<float4> containing 2D LUT data
 float3 Sample2DLUT(float2 uv) {
@@ -113,18 +113,18 @@ float3 Sample2DLUT(float2 uv) {
 ```
 
 ## Image format
-2D LUT can be stored in an image file with lossless compression and float data support, for example, EXR;
+A 2D LUT can be stored in an image file with lossless compression and float data support, for example, EXR;
 
-For 2D LUT with N nodes along the edge, image size should be:
+For a 2D LUT with N nodes along the edge, the image size should be:
 - For Packed version:
     - Width = N + 1
     - Height = N / 2
     
-Packed version supports only even N.
+Packed version supports only an even N.
 
 
 ## Text format
-To be similar to existing [3D LUT text format](https://kono.phpage.fr/images/a/a1/Adobe-cube-lut-specification-1.0.pdf), here is proposed text format for 2D LUT:
+To be similar to existing [3D LUT text format](https://kono.phpage.fr/images/a/a1/Adobe-cube-lut-specification-1.0.pdf), here is the proposed text format for the 2D LUT:
 
 ```
 # 2D LUT    
