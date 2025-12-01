@@ -145,6 +145,13 @@ Sorry for the long answer! It is not easy to explain these things without visual
 
 
 
+Q: Thank you for writing this article. We are streamlining our greenscreen-VP workflow and the gamut-compression has exactly highlighted one of the challenges we’re still facing, but I couldn’t put my finger on what the issue was. Sad it’s a Saturday, but I’m excited to test it all out next week!
+
+Edit: ps. Love the work on CyberGaffer. Would love to learn more about it. Can I get in contact with you?
+
+Thank you so much! I'm glad you found this research useful. Probably the best way to get in touch is the CyberGaffer Discord server: https://discord.gg/hRgKPkSAZm
+We have the entire team there. Please mention or DM me there (petr.sevostianov).
+
 
 
 

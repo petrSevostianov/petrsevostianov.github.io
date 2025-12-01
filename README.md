@@ -1,6 +1,6 @@
 ## About me
 Hi everyone!
-Welcome to my blog. I’m Petr Sevostianov, Co-founder and **CTO** at [Antilatency](https://antilatency.com/) and the developer of the [CyberGaffer](https://cybergaffer.com) system for virtual production lighting.
+Welcome to my blog. I’m Petr Sevostianov, Co-founder and **CTO** at [Antilatency](https://antilatency.com/) and the creator of the [CyberGaffer](https://cybergaffer.com) system for virtual production lighting.
 My background combines **mathematics** — including **vector algebra** and optimization methods such as various **calibration techniques** — with deep experience in 3D computer graphics, **rendering** algorithms, **shaders**, and general **GPU computing**. I also have a strong foundation in **physics**, particularly optics, **light** behavior (excluding interference), and **mechanics**.
 
 As the CTO of Antilatency, I lead a talented team of engineers and researchers in developing cutting-edge positional tracking and virtual production solutions.
